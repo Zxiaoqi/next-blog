@@ -1,4 +1,5 @@
 import Head from "next/head";
+import axios from "axios";
 import { Row, Col, Breadcrumb, Affix } from "antd";
 import '../pages/style/pages/detail.css'
 import Header from "../components/Header";
@@ -14,8 +15,8 @@ import ReactMarkdown from "react-markdown";
 import MarkdownNavbar from "markdown-navbar";
 import "markdown-navbar/dist/navbar.css";
 
-const detail = () => { 
-
+const Detail = (detail) => { 
+	// console.log(detail)
 	let markdown =
 	"# p01:课程介绍和环境搭建\n" +
 	"[ **M** ] arkdown + E [ **ditor** ] = **Mditor**  \n" +
@@ -98,4 +99,17 @@ const detail = () => {
 	);
 }
 
-export default detail;
+Detail.getInitialProps = async (context) => {
+	console.log(context.query.id);
+	let id = context.query.id;
+	const promise = new Promise((resolve) => {
+		axios("http://127.0.0.1:7001/default/getArticleById/" + id).then((res) => {
+			// console.log(res);
+			resolve(res.data.data[0]);
+		});
+	});
+
+	return await promise;
+};
+
+export default Detail;
